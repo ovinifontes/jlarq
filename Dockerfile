@@ -10,7 +10,9 @@ RUN corepack enable
 # ---- deps ----
 FROM base AS deps
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
+# pnpm-workspace.yaml carries `allowBuilds: { sharp: true }` — required here or
+# pnpm fails the CI install with ERR_PNPM_IGNORED_BUILDS.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # ---- builder ----
